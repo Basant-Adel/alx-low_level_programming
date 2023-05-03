@@ -1,67 +1,66 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "lists.h"
+#include <stdlib.h>
 
 /**
- * _ra - It's reallocates memory for array of pointers to node in linked list
- *
- *@list: The old list
- *@size: It's a size of the new list
- *@nl: It's a new node from list
- *Return: The new list
+ * find_listint_loop_fl - Find a loop in a list
+ *@head: List to search
+ *Return: It's a address of node where loop starts, return (NULL)
  */
 
-listint_t **_ra(listint_t **list, size_t size, listint_t *nl)
+listint_t *find_listint_loop_fl(listint_t *head)
 {
-	listint_t **newlist;
-	size_t b;
+	listint_t *pointer, *endnode;
 
-	newlist = malloc(size * sizeof(listint_t *));
-	if (newlist == NULL)
+	if (head == NULL)
+		return (NULL);
+
+	for (endnode = head->next; endnode != NULL; endnode = endnode->next)
 	{
-		free(list);
-		exit(98);
+		if (endnode == endnode->next)
+			return (endnode);
+		for (pointer = head; pointer != endnode; pointer = pointer->next)
+			if (pointer == endnode->next)
+				return (endnode->next);
 	}
-	for (b = 0; b < size - 1; b++)
-		newlist[b] = list[b];
-	newlist[b] = nl;
-	free(list);
-	return (newlist);
+	return (NULL);
 }
 
 /**
  * free_listint_safe - A function that frees a listint_t list
- *This function can free lists with a loop
+ *(can free lists with a loop)
  *
- *@h: It's a pointer of the first node
- *Return: The size of the list that was free’d (func sets the head to NULL)
+ *@h: The head of list
+ *Return: The size of the list that was free’d
  */
 
 size_t free_listint_safe(listint_t **h)
 {
-	size_t b, n_node = 0;
-	listint_t **list = NULL;
-	listint_t *next;
+	listint_t *next, *lnode;
+	size_t len_node;
+	int loop = 1;
 
-	if (head == NULL || *head == NULL)
-		return (n_node);
-	while (*head != NULL)
+	if (h == NULL || *h == NULL)
+		return (0);
+
+	lnode = find_listint_loop_fl(*h);
+	for (len_node = 0; (*h != lnode || loop) && *h != NULL; *h = next)
 	{
-		for (b = 0; b < n_node; b++)
+		len_node++;
+		next = (*h)->next;
+		if (*h == lnode && loop)
 		{
-			if (*head == list[b])
+			if (lnode == lnode->next)
 			{
-				*head = NULL;
-				free(list);
-				return (n_node);
+				free(*h);
+				break;
 			}
+			len_node++;
+			next = next->next;
+			free((*h)->next);
+			loop = 0;
 		}
-		n_node++;
-		list = _ra(list, n_node, *head);
-		next = (*head)->next;
-		free(*head);
-		*head = next;
+		free(*h);
 	}
-	free(list);
-	return (n_node);
+	*h = NULL;
+	return (len_node);
 }

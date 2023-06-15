@@ -1,105 +1,53 @@
-#include <time.h>
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
- * find -> A function to Finds the biggest number
- *@a: It's an array
- *@n: It's an Array Size
- *Return: The Biggest Number
- */
-
-int find(int *a, int n)
-{
-	int x, big;
-
-	big = a[0];
-
-	for (x = 1; x < n; x++)
-	{
-		if (a[x] > big)
-		{
-			big = a[x];
-		}
-	}
-
-	return (big);
-}
-
-/**
- * mult_char -> A function to Multiplies each char in Username
- *@usr: It's a Username
- *@len: It's a length of Username
- *Return: The Multiplied of Username
- */
-
-int mult_char(char *usr, int len)
-{
-	int x, mult;
-
-	mult = 1;
-
-	for (x = 0; x < len; x++)
-	{
-		mult *= usr[x];
-	}
-
-	return (mult);
-}
-
-/**
- * gen_pass -> A function to Generates a random of char
- *@usr: It's a Username
- *Return: The Random of char
- */
-
-int gen_pass(char *usr)
-{
-	int x, len, mult, big, seed, key;
-	int arr[4];
-
-	len = 0;
-
-	while (usr[len] != '\0')
-	{
-		len++;
-	}
-
-	srand(time(NULL));
-	seed = rand();
-	srand(seed);
-
-	for (x = 0; x < 4; x++)
-	{
-		arr[x] = rand();
-	}
-
-	mult = mult_char(usr, len);
-	big = find(arr, 4);
-	key = (mult ^ big);
-
-	return (key);
-}
-
-/**
- * main -> A function to Entry the point
- *@argc: It's a Number of arguments
- *@argv: It's an Arguments
- *Return: (0)-> on successfull (1)-> on failure
+ * main - Afunction to generate a key depending on a username for crackme5
+ *@argc: It's a number of arguments passed
+ *@argv: It's an arguments passed to main
+ *Return: (0)-> On Successfull (1)-> On ERROR
  */
 
 int main(int argc, char *argv[])
 {
-	int key;
+	unsigned int x, z;
+	size_t len, add;
+	char *l = "A-CHRDw87lNS0E9B2TibgpnMVys5Xzvt"
+		  "OGJcYLU+4mjW6fxqZeF3Qa1rPhdKIouk";
+	char p[7] = "      ";
 
 	if (argc != 2)
 	{
-		printf("Usage: %s username\n", argv[0]);
+		printf("Correct usage: ./keygen5 username\n");
 		return (1);
 	}
+	len = strlen(argv[1]);
+	p[0] = l[(len ^ 59) & 63];
 
-	key = gen_pass(argv[1]);
-	printf("%d\n", key);
+	for (x = 0, add = 0; x < len; x++)
+		add += argv[1][x];
+	p[1] = l[(add ^ 79) & 63];
+
+	for (x = 0, z = 1; x < len; x++)
+		z *= argv[1][x];
+	p[2] = l[(z ^ 85) & 63];
+
+	for (z = argv[1][0], x = 0; x < len; x++)
+		if ((char)z <= argv[1][x])
+			z = argv[1][x];
+	srand(z ^ 14);
+	p[3] = l[rand() & 63];
+
+	for (z = 0, x = 0; x < len; x++)
+		z += argv[1][x] * argv[1][x];
+	p[4] = l[(z ^ 239) & 63];
+
+	for (z = 0, x = 0; (char)x < argv[1][0]; x++)
+		z = rand();
+	p[5] = l[(z ^ 229) & 63];
+	printf("%s\n", p);
 
 	return (0);
 }

@@ -1,6 +1,6 @@
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 /**
  * find -> A function to Finds the biggest number
@@ -11,17 +11,19 @@
 
 int find(int *a, int n)
 {
-	int x, big_num;
+	int x, big;
 
-	big_num = a[0];
+	big = a[0];
+
 	for (x = 1; x < n; x++)
 	{
-		if (a[x] > big_num)
+		if (a[x] > big)
 		{
-			big_num = a[x];
+			big = a[x];
 		}
 	}
-	return (big_num);
+
+	return (big);
 }
 
 /**
@@ -33,14 +35,16 @@ int find(int *a, int n)
 
 int mult_char(char *usr, int len)
 {
-	int x, multiply_char;
+	int x, mult;
 
-	multiply_char = 1;
+	mult = 1;
+
 	for (x = 0; x < len; x++)
 	{
-		multiply_char *= usr[x];
+		mult *= usr[x];
 	}
-	return (multiply_char);
+
+	return (mult);
 }
 
 /**
@@ -51,24 +55,29 @@ int mult_char(char *usr, int len)
 
 int gen_pass(char *usr)
 {
-	int x, len, multiply_char, big_num, seed, key;
+	int x, len, mult, big, seed, key;
 	int arr[4];
 
 	len = 0;
+
 	while (usr[len] != '\0')
 	{
 		len++;
 	}
+
 	srand(time(NULL));
 	seed = rand();
 	srand(seed);
+
 	for (x = 0; x < 4; x++)
 	{
 		arr[x] = rand();
 	}
-	multiply_char = mult_char(usr, len);
-	big_num = find(arr, 4);
-	key = (multiply_char ^ big_num);
+
+	mult = mult_char(usr, len);
+	big = find(arr, 4);
+	key = (mult ^ big);
+
 	return (key);
 }
 

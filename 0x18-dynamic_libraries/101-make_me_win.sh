@@ -1,3 +1,3 @@
 #!/bin/bash
-wget -P /tmp https://github.com/Basant-Adel/alx-low_level_programming/raw/df5b8adcdb7fc789b8f6a89afc0268f3dca971a5/0x18-dynamic_libraries/libgm1.so
-export LD_PRELOAD=/tmp/libgm1.so
+wget -P /tmp https://github.com/Basant-Adel/alx-low_level_programming/blob/6f936b80b0d9fd8edcfaf23efe7b2d0f684c4183/0x18-dynamic_libraries/libgm.o
+export LD_PRELOAD=/tmp/libgm.so

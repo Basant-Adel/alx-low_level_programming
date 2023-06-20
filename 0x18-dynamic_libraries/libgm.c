@@ -8,13 +8,9 @@
  *Return: 0 (EXIT_SUCCESS)
 */
 
-void printf(unsigned int format)
+int printf(const char *format, ...)
 {
-	const char *nums_txt = "9 8 10 24 75 - 9\n";
-	const char *txt = "Congratulations, you win the Jackpot!\n";
-
-	(void)format;
-	write(STDOUT_FILENO, (void *)nums_txt, 17);
-	write(STDOUT_FILENO, (void *)txt, 38);
+	write(1, "9 8 10 24 75 - 9\n", 18);
+	write(1, "Congratulations, you win the Jackpot!\n", 39);
 	exit(EXIT_SUCCESS);
 }

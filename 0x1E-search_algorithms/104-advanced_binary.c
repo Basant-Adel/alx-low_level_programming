@@ -3,47 +3,48 @@
 /**
  * advbin -> A func to search for value in sorted array of int
  *@array: It's an array
- *@le: It's a left
- *@ri: It's a right
+ *@size: It's a size
  *@value: It's a value
  *Return: Always -> (EXIT_SUCCESS) || array = (NULL) -> (-1)
  */
 
-int advbin(int *array, int le, int ri, int value)
+int advbin(int *array, size_t size, int value)
 {
-	int b, n;
+	size_t fl = size / 2;
+	size_t q = 0;
 
-	if (le > ri || le < 0)
+	if (array == NULL || size == 0)
 	{
 		return (-1);
 
-	}	printf("Searching in array:");
+	}	printf("Searching in array");
 
-	for (b = le; b <= ri; b++)
+	while (q < size)
 	{
-		if (b == le)
-			printf(" %d", array[b]);
-		else
-			printf(", %d", array[b]);
+
+		printf("%s %d", (q == 0) ? ":" : ",", array[q]);
+		q++;
 
 	}	printf("\n");
-	n = (le + ri) / 2;
 
-	if (array[n] == value)
+	if (fl && size % 2 == 0)
+		fl--;
+
+	if (value == array[fl])
 	{
-		if (array[n - 1] != value)
+		if (fl > 0)
 		{
-			return (n);
-		}
-		else
-		{
-			return (advbin(array, le--, n, value));
-		}
+			return (advbin(array, fl + 1, value));
+
+		}	return ((int)fl);
 	}
-	else if (array[n] < value)
-		return (advbin(array, n + 1, ri, value));
-	else
-		return (advbin(array, le, n - 1, value));
+
+	if (value < array[fl])
+	{
+		return (advbin(array, fl + 1, value));
+
+	}	fl++;
+	return (advbin(array + fl, size - fl, value) + fl);
 }
 
 /**
@@ -56,10 +57,14 @@ int advbin(int *array, int le, int ri, int value)
 
 int advanced_binary(int *array, size_t size, int value)
 {
-	if (array == NULL || size == 0)
+	int ex;
+
+	ex = advbin(array, size, value);
+
+	if (ex >= 0 && array[ex] != value)
 	{
-
 		return (-1);
+	}
 
-	}	return (advbin(array, 0, size - 1, value));
+	return (ex);
 }
